@@ -1,0 +1,16 @@
+
+*.pdb
+
+Source/ROStations/obj/x64/Debug/
+
+*.user
+
+Source/ROStations/obj/Debug/
+
+Source/ROStations/bin/x64/Debug/
+
+Source/ROStations/.vs/ROStations/v16/.suo
+
+Source/ROStations/.vs/ROStations/v17/.suo
+
+GameData/ROStations/Parts/\@thumbs/
