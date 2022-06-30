@@ -1,0 +1,65 @@
+OWS
+	Water Management System - 10, 600-pound stainless steel tanks
+	RCS
+		Called WACS
+		22.5 LBS of thrust per Jet
+	
+MDA
+	Dimensions
+		120in Diameter x 163in Length
+		13,650 launch weight
+	Docking Ports
+		20in long, 33in diameter
+	2 Hatches
+		32in Diamter, 1.2in thick
+		
+Airlock Module
+	15,166 lbs Gross Weight
+	610 cubic feet Volume
+	211.54in long
+	Tunnel Assembly
+		153in Length
+		65in Diameter
+		322 cuft Volume
+	Structure Transition Section (STS)
+		47in Length
+		120in Diameter
+		288 cuft Volume
+	Pressurized AM to OWS Passageway
+		11.54in Length
+		42.5in Diameter
+		
+	FAS Structural Shell
+		22,479 lbs
+		80in Length
+		260in Diameter
+		
+	8 Ni-Cad batteries
+		
+DA Truss Assembly
+	3,744 lb
+	122in Length (Upper DA)
+	194in Length (Lower DA)
+	
+Payload Shroud
+	25,473 lbs
+	Overall Length 674in
+	Cylinder Length 350in
+	Biconical Nose Length 324in
+	Diameter 260in
+	
+		
+
+Electrical
+	Nickel-Cadmium Batteries
+	SWS Electrical System
+		Peak power supply of 7530 W
+	AM/OWS System
+		Peak power supply of 3814 W
+	ATM System
+		Peak power supply of 3716 W
+		
+	ATM Solar Panels 10,480 W (combined over sunlit duration)
+	AM/OWS System
+		8 x Power Conditioning and Energy Storage (PCG)
+			33 A-h Nickel-Cadmium Batteries each

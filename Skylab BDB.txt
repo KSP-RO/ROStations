@@ -1,0 +1,57 @@
+SKYLAB STATIONS
+
+CORE
+	XX Skylab
+		x bluedog_Saturn_S4B_InstrumentUnit (Skylab)
+		x bluedog_Skylab_Workshop
+		
+	Spacelab Airlock (Spacelab)
+		x bluedog_spacelab_airlockModule
+		
+	Spacelab Research Module (Spacelab)
+		x bluedog_spacelab_europeanModule
+		
+	Skylab Interplanetary
+		bluedog_Skylab_VFB_lightweightWetWorkshop --> MAYBE
+	
+UPPER
+	XXx (Skylab) bluedog_Skylab_airlockModule (Skylab)
+	
+	XXx (Skylab) bluedog_Skylab_multipleDockingAdapter (Skylab)
+	
+	x (Skylab) bluedog_spacelab_forwardAdapter (Skylab)
+	
+	x Spacelab
+		(Skylab) bluedog_Skylab_multipleDockingAdapter (Skylab)
+		(Skylab) bluedog_spacelab_forwardAdapter (Skylab)
+	
+	x (Spacelab) Different Endcap Options
+	
+	(Skylab) bluedog_Skylab_VFB_ESM
+	
+TOP
+	XXx (Skylab) bluedog_Skylab_multipleDockingAdapter (Skylab)
+	(Skylab) bluedog_structuralAdapter (Skylab)
+	
+LOWER
+	(Skylab) bluedog_EOSS_aftMDA
+
+BOTTOM
+	XXx (Skylab) bluedog_Skylab_RadiatorMount
+	(Skylab) bluedog_EOSS_aftMDA
+	
+	
+OTHER PARTS TO CONFIGURE
+	XX bluedog_skylab_ATM_truss (Has Ability to Move)
+	XX bluedog_Skylab_ATM_core
+	bluedog_Skylab_ATM_experiments (Has Animations)
+	bluedog_Skylab_evaLight
+	bluedog_Skylab_ATM_solar (Has Animations)
+	bluedog_Skylab_ATM_antenna
+	bluedog_Skylab_radarAltimeter
+	bluedog_Skylab_discone_antenna
+	bluedog_MOL_TrackingAntenna
+	bluedog_Skylab_solar_radio_burst_antenna
+	bluedog_Apollo_ConeDockingPort
+	bluedog_Skylab_RAP
+	bluedog_Gemini_DockingAntenna_Fixed
