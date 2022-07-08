@@ -14,8 +14,6 @@ namespace ROStations
     {
         private const string GroupDisplayName = "RO-Stations";
         private const string GroupName = "ModuleROStations";
-        private const float MinModelRatio = 0.5f;
-        private const float MaxModelRatio = 8;
 
         #region KSPFields
 
@@ -210,6 +208,17 @@ namespace ROStations
         private string[] lowerNodeNames;
         private string[] bottomNodeNames;
 
+        // Values based on the different parts of the Integrated Truss Assembly on the ISS
+        private const float trussMassMultiplier = 0.1f;
+        private const float trussCostMultiplier = 10f;
+        // Values based on the ISS Modules
+        private const float habMassMultiplier = 0.11f;
+        private const float habCostBaseMultiplier = 7000f;
+        private const float habCostFactor = 0.5f;
+        // Values based on ISS Modules and assuming a Crew Tube would have less mass and cost than a full Module
+        private const float crewTubeMassMultiplier = 0.1f;
+        private const float crewTubeCostMultiplier = 24.5f;
+
         // Values are based on CEVIS, COLBERT and RED from the ISS
         private const float exerciseMass = 1.344f;
         private const float exerciseVolume = 1.586f;
@@ -225,6 +234,7 @@ namespace ROStations
         internal ROLModelModule<ModuleROStations> upperModule;
         internal ROLModelModule<ModuleROStations> lowerModule;
         internal ROLModelModule<ModuleROStations> bottomModule;
+        private List<ROLModelModule<ModuleROStations>> moduleList = new List<ROLModelModule<ModuleROStations>>();
 
         // Mapping of all of the variant sets available for this part.  When variant list length > 0, an additional 'variant' UI slider is added to allow for switching between variants.
         private readonly Dictionary<string, ModelDefinitionVariantSet> variantSets = new Dictionary<string, ModelDefinitionVariantSet>();
@@ -269,6 +279,8 @@ namespace ROStations
             UpdateMass();
             UpdateCost();
             ROLStockInterop.UpdatePartHighlighting(part);
+            if (HighLogic.LoadedSceneIsEditor)
+                GameEvents.onEditorShipModified.Fire(EditorLogic.fetch.ship);
         }
 
         internal void ModelChangedHandlerWithSymmetry(bool pushNodes, bool symmetry)
@@ -471,6 +483,12 @@ namespace ROStations
             prevLower = 0;
             prevBottom = 0;
 
+            moduleList.Add(coreModule);
+            moduleList.Add(topModule);
+            moduleList.Add(upperModule);
+            moduleList.Add(lowerModule);
+            moduleList.Add(bottomModule);
+
             // Set up the model lists and load the currently selected model
             coreModule.setupModelList(coreDefs);
             topModule.setupModelList(topDefs);
@@ -568,7 +586,8 @@ namespace ROStations
             Fields[nameof(currentHabitat)].uiControlEditor.onFieldChanged =
             Fields[nameof(currentHabitat)].uiControlEditor.onSymmetryFieldChanged = (a, b) =>
             {
-                UpdateHabitatVolume();
+                //UpdateHabitatVolume();
+                ModelChangedHandler(true);
             };
 
             Fields[nameof(currentCore)].uiControlEditor.onFieldChanged =
@@ -615,32 +634,27 @@ namespace ROStations
 
         private void ValidateModules()
         {
-            ROLLog.debug("ValidateModules");
             string coreStyle = coreModule.definition.style;
             if (validateUpper && !coreModule.isValidModel(upperModule, coreStyle))
             {
-                ROLLog.debug("ValidateUpper");
                 ROLModelDefinition def = coreModule.findFirstValidModel(upperModule, coreStyle);
                 if (def == null) ROLLog.error("Could not locate valid definition for UPPER");
                 upperModule.modelSelected(def.name);
             }
             if (validateLower && !coreModule.isValidModel(lowerModule, coreStyle))
             {
-                ROLLog.debug("ValidateLower");
                 ROLModelDefinition def = coreModule.findFirstValidModel(lowerModule, coreStyle);
                 if (def == null) ROLLog.error("Could not locate valid definition for LOWER");
                 lowerModule.modelSelected(def.name);
             }
             if (validateTop && !upperModule.isValidModel(topModule, upperModule.definition.style))
             {
-                ROLLog.debug("ValidateTop");
                 ROLModelDefinition def = upperModule.findFirstValidModel(topModule, upperModule.definition.style);
                 if (def == null) ROLLog.error("Could not locate valid definition for TOP");
                 topModule.modelSelected(def.name);
             }
             if (validateBottom && !lowerModule.isValidModel(bottomModule, lowerModule.definition.style))
             {
-                ROLLog.debug("ValidateBottom");
                 ROLModelDefinition def = lowerModule.findFirstValidModel(bottomModule, lowerModule.definition.style);
                 if (def == null) ROLLog.error("Could not locate valid definition for BOTTOM");
                 bottomModule.modelSelected(def.name);
@@ -733,6 +747,7 @@ namespace ROStations
         {
             modifiedMass = coreModule.moduleMass + topModule.moduleMass + upperModule.moduleMass + lowerModule.moduleMass + bottomModule.moduleMass;
             if (exerciseEnabled) modifiedMass += exerciseMass;
+            modifiedMass += StationTypeMass(coreModule) + StationTypeMass(topModule) + StationTypeMass(upperModule) + StationTypeMass(lowerModule) + StationTypeMass(bottomModule);
         }
 
         /// <summary>
@@ -740,7 +755,70 @@ namespace ROStations
         /// </summary>
         public void UpdateCost()
         {
+            float totalHabVol = 0f;
+            float totalTrussVol = 0f;
+            float totalCrewTubeVol = 0f;
+
+            foreach (var mod in moduleList)
+            {
+                switch (mod.moduleStationType)
+                {
+                    case StationType.Hab:
+                        totalHabVol += mod.moduleTotalVolume;
+                        break;
+                    case StationType.Truss:
+                        totalTrussVol += mod.moduleTotalVolume;
+                        break;
+                    case StationType.CrewTube:
+                        totalCrewTubeVol += mod.moduleTotalVolume;
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            ROLLog.debug($"modifiedVolume: {modifiedVolume}");
             modifiedCost = coreModule.moduleCost + topModule.moduleCost + upperModule.moduleCost + lowerModule.moduleCost + bottomModule.moduleCost;
+            modifiedCost += StationTypeCost((float)modifiedVolume, StationType.Hab) + StationTypeCost(totalTrussVol, StationType.Truss) + StationTypeCost(totalCrewTubeVol, StationType.CrewTube);
+        }
+
+        public float StationTypeMass(ROLModelModule<ModuleROStations> module)
+        {
+            float tempMass = 0f;
+            switch (module.moduleStationType)
+            {
+                case StationType.Hab:
+                    tempMass = module.moduleTotalVolume * habMassMultiplier;
+                    break;
+                case StationType.Truss:
+                    tempMass = module.moduleTotalVolume * trussMassMultiplier;
+                    break;
+                case StationType.CrewTube:
+                    tempMass = module.moduleTotalVolume * crewTubeMassMultiplier;
+                    break;
+                default:
+                    break;
+            }
+            return tempMass;
+        }
+        public float StationTypeCost(float vol, StationType station)
+        {
+            float tempCost = 0f;
+            switch (station)
+            {
+                case StationType.Hab:
+                    tempCost = Mathf.Pow(vol, habCostFactor) * habCostBaseMultiplier;
+                    break;
+                case StationType.Truss:
+                    tempCost = vol * trussCostMultiplier;
+                    break;
+                case StationType.CrewTube:
+                    tempCost = vol * crewTubeCostMultiplier;
+                    break;
+                default:
+                    break;
+            }
+            return tempCost;
         }
 
         /// <summary>
@@ -1044,7 +1122,6 @@ namespace ROStations
                 if (pm.GUIName == "Comfort")
                 {
                     string bonus = KerbalismInterface.GetComfortBonus(pm);
-                    ROLLog.debug($"bonus: {bonus}");
                     if (bonus == "exercise" && exerciseEnabled) KerbalismInterface.SetComfortEnabled(pm, exerciseEnabled);
                     if (bonus == "panorama" && panoramaEnabled) KerbalismInterface.SetComfortEnabled(pm, panoramaEnabled);
                     if (bonus == "plants" && plantsEnabled) KerbalismInterface.SetComfortEnabled(pm, plantsEnabled);
