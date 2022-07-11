@@ -10,7 +10,7 @@ using System.Reflection;
 namespace ROStations
 {
     [SuppressMessage("ReSharper", "InvertIf")]
-    public class ModuleROStations : PartModule, IPartCostModifier, IPartMassModifier, IRecolorable, IContainerVolumeContributor
+    public class ModuleROStations : PartModule, IPartCostModifier, IPartMassModifier, IRecolorable
     {
         private const string GroupDisplayName = "RO-Stations";
         private const string GroupName = "ModuleROStations";
@@ -52,6 +52,9 @@ namespace ROStations
         [KSPField] public bool validateLower = true;
         [KSPField] public bool validateBottom = true;
         [KSPField] public bool noHab = false;
+
+        [KSPField] public string upperParentOptions = "Upper, Top";
+        [KSPField] public string lowerParentOptions = "Lower, Bottom";
 
 
         [KSPField(isPersistant = true, guiActiveEditor = true, guiName = "Diameter", guiUnits = "m", groupName = GroupName, groupDisplayName = GroupDisplayName),
@@ -106,23 +109,91 @@ namespace ROStations
 
         [KSPField(isPersistant = true, guiActiveEditor = true, guiName = "Core", groupName = GroupName),
          UI_ChooseOption(suppressEditorShipModified = true)]
-        public string currentCore = "Mount-None";
+        public string currentCore = "Model-None";
 
         [KSPField(isPersistant = true, guiActiveEditor = true, guiName = "Top", groupName = GroupName),
          UI_ChooseOption(suppressEditorShipModified = true)]
-        public string currentTop = "Mount-None";
+        public string currentTop = "Model-None";
 
         [KSPField(isPersistant = true, guiActiveEditor = true, guiName = "Upper", groupName = GroupName),
          UI_ChooseOption(suppressEditorShipModified = true)]
-        public string currentUpper = "Mount-None";
+        public string currentUpper = "Model-None";
 
         [KSPField(isPersistant = true, guiActiveEditor = true, guiName = "Lower", groupName = GroupName),
          UI_ChooseOption(suppressEditorShipModified = true)]
-        public string currentLower = "Mount-None";
+        public string currentLower = "Model-None";
 
         [KSPField(isPersistant = true, guiActiveEditor = true, guiName = "Bottom", groupName = GroupName),
          UI_ChooseOption(suppressEditorShipModified = true)]
-        public string currentBottom = "Mount-None";
+        public string currentBottom = "Model-None";
+
+        [KSPField(isPersistant = true, guiActiveEditor = true, guiName = "Core Radial", groupName = GroupName),
+         UI_ChooseOption(suppressEditorShipModified = true)]
+        public string currentBodyRadial = "Model-None";
+
+        [KSPField(isPersistant = true, guiActiveEditor = true, guiName = "Core Radial Layout", groupName = GroupName),
+         UI_ChooseOption(suppressEditorShipModified = true)]
+        public string currentBodyRadialLayout = "Single";
+
+        [KSPField(isPersistant = true, guiActiveEditor = true, guiActive = false, guiName = "Core V.Offset"),
+         UI_FloatEdit(sigFigs = 4, suppressEditorShipModified = true, minValue = -10, maxValue = 10, incrementLarge = 0.5f, incrementSmall = 0.25f, incrementSlide = 0.01f)]
+        public float currentBodyRadialVOffset = 0f;
+
+        [KSPField(isPersistant = true, guiActiveEditor = true, guiActive = false, guiName = "Core H.Offset"),
+         UI_FloatEdit(sigFigs = 4, suppressEditorShipModified = true, minValue = -10, maxValue = 10, incrementLarge = 0.5f, incrementSmall = 0.25f, incrementSlide = 0.01f)]
+        public float currentBodyRadialHOffset = 0f;
+
+        [KSPField(isPersistant = true, guiActiveEditor = true, guiActive = false, guiName = "Core Radial Scale"),
+         UI_FloatEdit(sigFigs = 4, suppressEditorShipModified = true, minValue = -0.25f, maxValue = 10, incrementLarge = 0.5f, incrementSmall = 0.25f, incrementSlide = 0.01f)]
+        public float currentBodyRadialScale = 1f;
+
+        [KSPField(isPersistant = true, guiActiveEditor = true, guiName = "Upper Radial", groupName = GroupName),
+         UI_ChooseOption(suppressEditorShipModified = true)]
+        public string currentUpperRadial = "Model-None";
+
+        [KSPField(isPersistant = true, guiActiveEditor = true, guiName = "Upper Radial Layout", groupName = GroupName),
+         UI_ChooseOption(suppressEditorShipModified = true)]
+        public string currentUpperRadialLayout = "Single";
+
+        [KSPField(isPersistant = true, guiActiveEditor = true, guiName = "Upper Parent", groupName = GroupName),
+         UI_ChooseOption(suppressEditorShipModified = true)]
+        public string currentUpperRadialParent = "Upper";
+
+        [KSPField(isPersistant = true, guiActiveEditor = true, guiActive = false, guiName = "Top V.Offset"),
+         UI_FloatEdit(sigFigs = 4, suppressEditorShipModified = true, minValue = -10, maxValue = 10, incrementLarge = 0.5f, incrementSmall = 0.25f, incrementSlide = 0.01f)]
+        public float currentUpperRadialVOffset = 0f;
+
+        [KSPField(isPersistant = true, guiActiveEditor = true, guiActive = false, guiName = "Top H.Offset"),
+         UI_FloatEdit(sigFigs = 4, suppressEditorShipModified = true, minValue = -10, maxValue = 10, incrementLarge = 0.5f, incrementSmall = 0.25f, incrementSlide = 0.01f)]
+        public float currentUpperRadialHOffset = 0f;
+
+        [KSPField(isPersistant = true, guiActiveEditor = true, guiActive = false, guiName = "Top Radial Scale"),
+         UI_FloatEdit(sigFigs = 4, suppressEditorShipModified = true, minValue = -0.25f, maxValue = 10, incrementLarge = 0.5f, incrementSmall = 0.25f, incrementSlide = 0.01f)]
+        public float currentUpperRadialScale = 1f;
+
+        [KSPField(isPersistant = true, guiActiveEditor = true, guiName = "Lower Radial", groupName = GroupName),
+         UI_ChooseOption(suppressEditorShipModified = true)]
+        public string currentLowerRadial = "Model-None";
+
+        [KSPField(isPersistant = true, guiActiveEditor = true, guiName = "Lower Radial Layout", groupName = GroupName),
+         UI_ChooseOption(suppressEditorShipModified = true)]
+        public string currentLowerRadialLayout = "Single";
+
+        [KSPField(isPersistant = true, guiActiveEditor = true, guiName = "Lower Parent", groupName = GroupName),
+         UI_ChooseOption(suppressEditorShipModified = true)]
+        public string currentLowerRadialParent = "Lower";
+
+        [KSPField(isPersistant = true, guiActiveEditor = true, guiActive = false, guiName = "Lower V.Offset"),
+         UI_FloatEdit(sigFigs = 4, suppressEditorShipModified = true, minValue = -10, maxValue = 10, incrementLarge = 0.5f, incrementSmall = 0.25f, incrementSlide = 0.01f)]
+        public float currentLowerRadialVOffset = 0f;
+
+        [KSPField(isPersistant = true, guiActiveEditor = true, guiActive = false, guiName = "Lower H.Offset"),
+         UI_FloatEdit(sigFigs = 4, suppressEditorShipModified = true, minValue = -10, maxValue = 10, incrementLarge = 0.5f, incrementSmall = 0.25f, incrementSlide = 0.01f)]
+        public float currentLowerRadialHOffset = 0f;
+
+        [KSPField(isPersistant = true, guiActiveEditor = true, guiActive = false, guiName = "Lower Radial Scale"),
+         UI_FloatEdit(sigFigs = 4, suppressEditorShipModified = true, minValue = -0.25f, maxValue = 10, incrementLarge = 0.5f, incrementSmall = 0.25f, incrementSlide = 0.01f)]
+        public float currentLowerRadialScale = 1f;
 
         //------------------------------------------TEXTURE SET PERSISTENCE-----------------------------------------------//
 
@@ -145,6 +216,18 @@ namespace ROStations
         [KSPField(isPersistant = true, guiActiveEditor = true, guiName = "Bottom Tex", groupName = GroupName),
          UI_ChooseOption(suppressEditorShipModified = true)]
         public string currentBottomTexture = "default";
+
+        [KSPField(isPersistant = true, guiActiveEditor = true, guiName = "Core Radial Tex", groupName = GroupName),
+         UI_ChooseOption(suppressEditorShipModified = true)]
+        public string currentBodyRadialTexture = "default";
+
+        [KSPField(isPersistant = true, guiActiveEditor = true, guiName = "Upper Radial Tex", groupName = GroupName),
+         UI_ChooseOption(suppressEditorShipModified = true)]
+        public string currentUpperRadialTexture = "default";
+
+        [KSPField(isPersistant = true, guiActiveEditor = true, guiName = "Lower Radial Tex", groupName = GroupName),
+         UI_ChooseOption(suppressEditorShipModified = true)]
+        public string currentLowerRadialTexture = "default";
 
         //-------------------------------------RESETTING MODEL TO ORIGINAL SIZE------------------------------------------//
         [KSPEvent(guiActiveEditor = true, guiName = "Reset Model to Original", groupName = GroupName)]
@@ -182,6 +265,9 @@ namespace ROStations
         [KSPField(isPersistant = true)] public string upperModulePersistentData = string.Empty;
         [KSPField(isPersistant = true)] public string lowerModulePersistentData = string.Empty;
         [KSPField(isPersistant = true)] public string bottomModulePersistentData = string.Empty;
+        [KSPField(isPersistant = true)] public string bodyRadialModulePersistentData = string.Empty;
+        [KSPField(isPersistant = true)] public string upperRadialModulePersistentData = string.Empty;
+        [KSPField(isPersistant = true)] public string lowerRadialModulePersistentData = string.Empty;
 
         #endregion KSPFields
 
@@ -201,6 +287,13 @@ namespace ROStations
         private float prevUpper = 0;
         private float prevLower = 0;
         private float prevBottom = 0;
+        private float bodyRadialRadius = 0;
+        private float upperRadialRadius = 0;
+        private float lowerRadialRadius = 0;
+
+        private bool hasBodyRadial = false;
+        private bool hasUpperRadial = false;
+        private bool hasLowerRadial = false;
 
         private string[] coreNodeNames;
         private string[] topNodeNames;
@@ -234,6 +327,9 @@ namespace ROStations
         internal ROLModelModule<ModuleROStations> upperModule;
         internal ROLModelModule<ModuleROStations> lowerModule;
         internal ROLModelModule<ModuleROStations> bottomModule;
+        internal ROLModelModule<ModuleROStations> bodyRadialModule;
+        internal ROLModelModule<ModuleROStations> upperRadialModule;
+        internal ROLModelModule<ModuleROStations> lowerRadialModule;
         private List<ROLModelModule<ModuleROStations>> moduleList = new List<ROLModelModule<ModuleROStations>>();
 
         // Mapping of all of the variant sets available for this part.  When variant list length > 0, an additional 'variant' UI slider is added to allow for switching between variants.
@@ -263,6 +359,7 @@ namespace ROStations
         internal ModelDefinitionLayoutOptions[] upperDefs;
         internal ModelDefinitionLayoutOptions[] lowerDefs;
         internal ModelDefinitionLayoutOptions[] bottomDefs;
+        internal ModelDefinitionLayoutOptions[] radialDefs;
 
         internal void ModelChangedHandler(bool pushNodes)
         {
@@ -271,11 +368,13 @@ namespace ROStations
             ValidateVScale();
             UpdateModulePositions();
             UpdateModelMeshes();
+            UpdateRadialPositions();
             UpdateAttachNodes(pushNodes);
             UpdateAvailableVariants();            
             SetPreviousModuleLength();
             UpdateDragCubes();
             UpdateHabitatVolume();
+            ValidateRadial();
             UpdateMass();
             UpdateCost();
             ROLStockInterop.UpdatePartHighlighting(part);
@@ -341,7 +440,7 @@ namespace ROStations
 
         #region IRecolorable and IContainerVolumeContributor Overrides
 
-        public string[] getSectionNames() => new string[] { "Top", "Upper", "Core", "Lower", "Bottom" };
+        public string[] getSectionNames() => new string[] { "Top", "Upper", "Core", "Lower", "Bottom", "Core Radial", "Upper Radial", "Lower Radial" };
 
         public RecoloringData[] getSectionColors(string section) => section switch
         {
@@ -350,6 +449,9 @@ namespace ROStations
             "Core" => coreModule.recoloringData,
             "Lower" => lowerModule.recoloringData,
             "Bottom" => bottomModule.recoloringData,
+            "Core Radial" => bodyRadialModule.recoloringData,
+            "Upper Radial" => upperRadialModule.recoloringData,
+            "Bottom Radial" => lowerRadialModule.recoloringData,
             _ => coreModule.recoloringData,
         };
 
@@ -360,6 +462,9 @@ namespace ROStations
             else if (section == "Core") coreModule.setSectionColors(colors);
             else if (section == "Lower") lowerModule.setSectionColors(colors);
             else if (section == "Bottom") bottomModule.setSectionColors(colors);
+            else if (section == "Core Radial") bodyRadialModule.setSectionColors(colors);
+            else if (section == "Upper Radial") upperRadialModule.setSectionColors(colors);
+            else if (section == "Lower Radial") lowerRadialModule.setSectionColors(colors);
         }
 
         public TextureSet getSectionTexture(string section) => section switch
@@ -369,26 +474,11 @@ namespace ROStations
             "Core" => coreModule.textureSet,
             "Lower" => lowerModule.textureSet,
             "Bottom" => bottomModule.textureSet,
+            "Core Radial" => bodyRadialModule.textureSet,
+            "Upper Radial" => upperRadialModule.textureSet,
+            "Bottom Radial" => lowerRadialModule.textureSet,
             _ => coreModule.textureSet,
         };
-
-        // IContainerVolumeContributor override
-        public ContainerContribution[] getContainerContributions()
-        {
-            ContainerContribution[] cts;
-            ContainerContribution ct0 = GetCC("core", coreContainerIndex, coreModule.moduleVolume * 1000f);
-            ContainerContribution ct1 = GetCC("top", topContainerIndex, topModule.moduleVolume * 1000f);
-            ContainerContribution ct2 = GetCC("upper", upperContainerIndex, upperModule.moduleVolume * 1000f);
-            ContainerContribution ct3 = GetCC("lower", lowerContainerIndex, lowerModule.moduleVolume * 1000f);
-            ContainerContribution ct4 = GetCC("bottom", bottomContainerIndex, bottomModule.moduleVolume * 1000f);
-            cts = new ContainerContribution[5] { ct0, ct1, ct2, ct3, ct4 };
-            return cts;
-        }
-
-        private ContainerContribution GetCC(string name, int index, float vol)
-        {
-            return new ContainerContribution(name, index, vol);
-        }
 
         #endregion IRecolorable and IContainerVolumeContributor Overrides
 
@@ -432,6 +522,7 @@ namespace ROStations
             upperDefs = ROLModelData.getModelDefinitions(node.GetNodes("UPPER"));
             lowerDefs = ROLModelData.getModelDefinitions(node.GetNodes("LOWER"));
             bottomDefs = ROLModelData.getModelDefinitions(node.GetNodes("BOTTOM"));
+            radialDefs = ROLModelData.getModelDefinitions(node.GetNodes("RADIAL"));
 
             coreModule = new ROLModelModule<ModuleROStations>(part, this, ROLUtils.GetRootTransform(part, "ModularPart-CORE"), ModelOrientation.CENTRAL, nameof(currentCore), null, nameof(currentCoreTexture), nameof(coreModulePersistentData));
             coreModule.name = "ModuleROStations-Core";
@@ -470,11 +561,35 @@ namespace ROStations
             else
                 bottomModule.getValidOptions = () => bottomDefs;
 
+            bodyRadialModule = new ROLModelModule<ModuleROStations>(part, this, ROLUtils.GetRootTransform(part, "ModularPart-RADIAL-CORE"), ModelOrientation.CENTRAL, nameof(currentBodyRadial), nameof(currentBodyRadialLayout), nameof(currentBodyRadialTexture), nameof(bodyRadialModulePersistentData));
+            bodyRadialModule.name = "ModuleROStations-Radial-Core";
+            bodyRadialModule.getSymmetryModule = m => m.bodyRadialModule;
+            bodyRadialModule.getValidOptions = () => radialDefs;
+            bodyRadialModule.getLayoutPositionScalar = () => bodyRadialRadius;
+            bodyRadialModule.getLayoutScaleScalar = () => 1f;
+
+            upperRadialModule = new ROLModelModule<ModuleROStations>(part, this, ROLUtils.GetRootTransform(part, "ModularPart-RADIAL-UPPER"), ModelOrientation.CENTRAL, nameof(currentUpperRadial), nameof(currentUpperRadialLayout), nameof(currentUpperRadialTexture), nameof(upperRadialModulePersistentData));
+            upperRadialModule.name = "ModuleROStations-Radial-Upper";
+            upperRadialModule.getSymmetryModule = m => m.upperRadialModule;
+            upperRadialModule.getValidOptions = () => radialDefs;
+            upperRadialModule.getLayoutPositionScalar = () => upperRadialRadius;
+            upperRadialModule.getLayoutScaleScalar = () => 1f;
+
+            lowerRadialModule = new ROLModelModule<ModuleROStations>(part, this, ROLUtils.GetRootTransform(part, "ModularPart-RADIAL-LOWER"), ModelOrientation.CENTRAL, nameof(currentLowerRadial), nameof(currentLowerRadialLayout), nameof(currentLowerRadialTexture), nameof(lowerRadialModulePersistentData));
+            lowerRadialModule.name = "ModuleROStations-Radial-Lower";
+            lowerRadialModule.getSymmetryModule = m => m.lowerRadialModule;
+            lowerRadialModule.getValidOptions = () => radialDefs;
+            lowerRadialModule.getLayoutPositionScalar = () => lowerRadialRadius;
+            lowerRadialModule.getLayoutScaleScalar = () => 1f;
+
             coreModule.volumeScalar = volumeScalingPower;
             topModule.volumeScalar = volumeScalingPower;
             upperModule.volumeScalar = volumeScalingPower;
             lowerModule.volumeScalar = volumeScalingPower;
             bottomModule.volumeScalar = volumeScalingPower;
+            bodyRadialModule.volumeScalar = volumeScalingPower;
+            upperRadialModule.volumeScalar = volumeScalingPower;
+            lowerRadialModule.volumeScalar = volumeScalingPower;
 
             prevDiameter = currentDiameter;
             prevCore = coreModule.moduleHeight;
@@ -488,6 +603,9 @@ namespace ROStations
             moduleList.Add(upperModule);
             moduleList.Add(lowerModule);
             moduleList.Add(bottomModule);
+            moduleList.Add(bodyRadialModule);
+            moduleList.Add(upperRadialModule);
+            moduleList.Add(lowerRadialModule);
 
             // Set up the model lists and load the currently selected model
             coreModule.setupModelList(coreDefs);
@@ -495,11 +613,17 @@ namespace ROStations
             upperModule.setupModelList(upperDefs);
             lowerModule.setupModelList(lowerDefs);
             bottomModule.setupModelList(bottomDefs);
+            bodyRadialModule.setupModelList(radialDefs);
+            upperRadialModule.setupModelList(radialDefs);
+            lowerRadialModule.setupModelList(radialDefs);
             coreModule.setupModel();
             topModule.setupModel();
             upperModule.setupModel();
             lowerModule.setupModel();
             bottomModule.setupModel();
+            bodyRadialModule.setupModel();
+            upperRadialModule.setupModel();
+            lowerRadialModule.setupModel();
             if (validateTop || validateUpper || validateLower || validateBottom) ValidateModules();
 
             atmoResource = part.Resources["Atmosphere"];
@@ -540,6 +664,93 @@ namespace ROStations
 
             Fields[nameof(currentDiameter)].uiControlEditor.onFieldChanged =
             Fields[nameof(currentDiameter)].uiControlEditor.onSymmetryFieldChanged = OnDiameterChanged;
+
+            Fields[nameof(currentBodyRadialVOffset)].uiControlEditor.onFieldChanged =
+            Fields[nameof(currentBodyRadialVOffset)].uiControlEditor.onSymmetryFieldChanged = (a, b) =>
+            {
+                ModelChangedHandler(true);
+            };
+
+            Fields[nameof(currentBodyRadialHOffset)].uiControlEditor.onFieldChanged =
+            Fields[nameof(currentBodyRadialHOffset)].uiControlEditor.onSymmetryFieldChanged = (a, b) =>
+            {
+                ModelChangedHandler(true);
+            };
+
+            Fields[nameof(currentBodyRadialScale)].uiControlEditor.onFieldChanged =
+            Fields[nameof(currentBodyRadialScale)].uiControlEditor.onSymmetryFieldChanged = (a, b) =>
+            {
+                ModelChangedHandler(true);
+            };
+
+            Fields[nameof(currentBodyRadialLayout)].uiControlEditor.onFieldChanged =
+            Fields[nameof(currentBodyRadialLayout)].uiControlEditor.onSymmetryFieldChanged = (a, b) =>
+            {
+                bodyRadialModule.LayoutSelected(currentBodyRadialLayout);
+                ModelChangedHandler(true);
+            };
+
+            Fields[nameof(currentUpperRadialVOffset)].uiControlEditor.onFieldChanged =
+            Fields[nameof(currentUpperRadialVOffset)].uiControlEditor.onSymmetryFieldChanged = (a, b) =>
+            {
+                ModelChangedHandler(true);
+            };
+
+            Fields[nameof(currentUpperRadialHOffset)].uiControlEditor.onFieldChanged =
+            Fields[nameof(currentUpperRadialHOffset)].uiControlEditor.onSymmetryFieldChanged = (a, b) =>
+            {
+                ModelChangedHandler(true);
+            };
+
+            Fields[nameof(currentUpperRadialScale)].uiControlEditor.onFieldChanged =
+            Fields[nameof(currentUpperRadialScale)].uiControlEditor.onSymmetryFieldChanged = (a, b) =>
+            {
+                ModelChangedHandler(true);
+            };
+
+            Fields[nameof(currentUpperRadialLayout)].uiControlEditor.onFieldChanged =
+            Fields[nameof(currentUpperRadialLayout)].uiControlEditor.onSymmetryFieldChanged = (a, b) =>
+            {
+                upperRadialModule.LayoutSelected(currentUpperRadialLayout);
+                ModelChangedHandler(true);
+            };
+
+            Fields[nameof(currentUpperRadialParent)].uiControlEditor.onFieldChanged =
+            Fields[nameof(currentUpperRadialParent)].uiControlEditor.onSymmetryFieldChanged = (a, b) =>
+            {
+                ModelChangedHandler(true);
+            };
+
+            Fields[nameof(currentLowerRadialVOffset)].uiControlEditor.onFieldChanged =
+            Fields[nameof(currentLowerRadialVOffset)].uiControlEditor.onSymmetryFieldChanged = (a, b) =>
+            {
+                ModelChangedHandler(true);
+            };
+
+            Fields[nameof(currentLowerRadialHOffset)].uiControlEditor.onFieldChanged =
+            Fields[nameof(currentLowerRadialHOffset)].uiControlEditor.onSymmetryFieldChanged = (a, b) =>
+            {
+                ModelChangedHandler(true);
+            };
+
+            Fields[nameof(currentLowerRadialScale)].uiControlEditor.onFieldChanged =
+            Fields[nameof(currentLowerRadialScale)].uiControlEditor.onSymmetryFieldChanged = (a, b) =>
+            {
+                ModelChangedHandler(true);
+            };
+
+            Fields[nameof(currentLowerRadialLayout)].uiControlEditor.onFieldChanged =
+            Fields[nameof(currentLowerRadialLayout)].uiControlEditor.onSymmetryFieldChanged = (a, b) =>
+            {
+                lowerRadialModule.LayoutSelected(currentLowerRadialLayout);
+                ModelChangedHandler(true);
+            };
+
+            Fields[nameof(currentLowerRadialParent)].uiControlEditor.onFieldChanged =
+            Fields[nameof(currentLowerRadialParent)].uiControlEditor.onSymmetryFieldChanged = (a, b) =>
+            {
+                ModelChangedHandler(true);
+            };
 
             Fields[nameof(currentVScale)].uiControlEditor.onFieldChanged =
             Fields[nameof(currentVScale)].uiControlEditor.onSymmetryFieldChanged = (a, b) =>
@@ -586,7 +797,6 @@ namespace ROStations
             Fields[nameof(currentHabitat)].uiControlEditor.onFieldChanged =
             Fields[nameof(currentHabitat)].uiControlEditor.onSymmetryFieldChanged = (a, b) =>
             {
-                //UpdateHabitatVolume();
                 ModelChangedHandler(true);
             };
 
@@ -600,11 +810,24 @@ namespace ROStations
                 Fields[nameof(currentLower)].uiControlEditor.onSymmetryFieldChanged = OnModelSelectionChanged;
             Fields[nameof(currentBottom)].uiControlEditor.onFieldChanged =
                 Fields[nameof(currentBottom)].uiControlEditor.onSymmetryFieldChanged = OnModelSelectionChanged;
+            Fields[nameof(currentBodyRadial)].uiControlEditor.onFieldChanged =
+                Fields[nameof(currentBodyRadial)].uiControlEditor.onSymmetryFieldChanged = OnModelSelectionChanged;
+            Fields[nameof(currentUpperRadial)].uiControlEditor.onFieldChanged =
+                Fields[nameof(currentUpperRadial)].uiControlEditor.onSymmetryFieldChanged = OnModelSelectionChanged;
+            Fields[nameof(currentLowerRadial)].uiControlEditor.onFieldChanged =
+                Fields[nameof(currentLowerRadial)].uiControlEditor.onSymmetryFieldChanged = OnModelSelectionChanged;
 
             //------------------MODEL DIAMETER / LENGTH SWITCH UI INIT---------------------//
             this.ROLupdateUIFloatEditControl(nameof(currentDiameter), minDiameter, maxDiameter, diameterLargeStep, diameterSmallStep, diameterSlideStep);
             this.ROLupdateUIFloatEditControl(nameof(currentHabitat), habMinPercent, habMaxPercent, 15f, 5f, 1f);
 
+            //-----------------------MODULE PARENT SWITCH UI INIT--------------------------//
+            string[] upperRadialOptions = ROLUtils.parseCSV(upperParentOptions);
+            string[] lowerRadialOptions = ROLUtils.parseCSV(lowerParentOptions);
+            this.updateUIChooseOptionControl(nameof(currentUpperRadialParent), upperRadialOptions, upperRadialOptions, true, currentUpperRadialParent);
+            this.updateUIChooseOptionControl(nameof(currentLowerRadialParent), lowerRadialOptions, lowerRadialOptions, true, currentLowerRadialParent);
+
+            //--------------------------SHOW/HIDE GUI OPTIONS-----------------------------//
             Fields[nameof(currentDiameter)].guiActiveEditor = maxDiameter != minDiameter;
             Fields[nameof(currentVScale)].guiActiveEditor = enableVScale;
             Fields[nameof(currentTopVScale)].guiActiveEditor = enableTopVScale;
@@ -616,12 +839,30 @@ namespace ROStations
             Fields[nameof(currentHabitat)].guiActiveEditor = coreModule.moduleCanAdjustHab;
             Events[nameof(ToggleExercise)].guiActiveEditor = coreModule.moduleCanExercise;
 
+            Fields[nameof(currentBodyRadialVOffset)].guiActiveEditor = hasBodyRadial;
+            Fields[nameof(currentBodyRadialHOffset)].guiActiveEditor = hasBodyRadial;
+            Fields[nameof(currentBodyRadialScale)].guiActiveEditor = hasBodyRadial;
+            //Fields[nameof(currentBodyRadialLayout)].guiActiveEditor = hasBodyRadial;
+            Fields[nameof(currentUpperRadialVOffset)].guiActiveEditor = hasUpperRadial;
+            Fields[nameof(currentUpperRadialHOffset)].guiActiveEditor = hasUpperRadial;
+            Fields[nameof(currentUpperRadialScale)].guiActiveEditor = hasUpperRadial;
+            //Fields[nameof(currentUpperRadialLayout)].guiActiveEditor = hasUpperRadial;
+            Fields[nameof(currentUpperRadialParent)].guiActiveEditor = hasUpperRadial;
+            Fields[nameof(currentLowerRadialVOffset)].guiActiveEditor = hasLowerRadial;
+            Fields[nameof(currentLowerRadialHOffset)].guiActiveEditor = hasLowerRadial;
+            Fields[nameof(currentLowerRadialScale)].guiActiveEditor = hasLowerRadial;
+            //Fields[nameof(currentLowerRadialLayout)].guiActiveEditor = hasLowerRadial;
+            Fields[nameof(currentLowerRadialParent)].guiActiveEditor = hasUpperRadial;            
+
             //------------------MODULE TEXTURE SWITCH UI INIT---------------------//
             Fields[nameof(currentTopTexture)].uiControlEditor.onFieldChanged = topModule.textureSetSelected;
             Fields[nameof(currentUpperTexture)].uiControlEditor.onFieldChanged = upperModule.textureSetSelected;
             Fields[nameof(currentCoreTexture)].uiControlEditor.onFieldChanged = coreModule.textureSetSelected;
             Fields[nameof(currentLowerTexture)].uiControlEditor.onFieldChanged = lowerModule.textureSetSelected;
             Fields[nameof(currentBottomTexture)].uiControlEditor.onFieldChanged = bottomModule.textureSetSelected;
+            Fields[nameof(currentBodyRadialTexture)].uiControlEditor.onFieldChanged = bodyRadialModule.textureSetSelected;
+            Fields[nameof(currentUpperRadialTexture)].uiControlEditor.onFieldChanged = upperRadialModule.textureSetSelected;
+            Fields[nameof(currentLowerRadialTexture)].uiControlEditor.onFieldChanged = lowerRadialModule.textureSetSelected;
 
             // FIXME
             /*
@@ -673,13 +914,31 @@ namespace ROStations
 
         public void OnModelSelectionChanged(BaseField f, object o)
         {
+            bool hasRadialChanged = false;
             if (f.name == Fields[nameof(currentCore)].name) coreModule.modelSelected(currentCore);
             else if (f.name == Fields[nameof(currentUpper)].name) upperModule.modelSelected(currentUpper);
             else if (f.name == Fields[nameof(currentLower)].name) lowerModule.modelSelected(currentLower);
             else if (f.name == Fields[nameof(currentTop)].name) topModule.modelSelected(currentTop);
             else if (f.name == Fields[nameof(currentBottom)].name) bottomModule.modelSelected(currentBottom);
+            else if (f.name == Fields[nameof(currentBodyRadial)].name)
+            {
+                bodyRadialModule.modelSelected(currentBodyRadial);
+                hasRadialChanged = true;
+            }
+            else if (f.name == Fields[nameof(currentUpperRadial)].name)
+            {
+                upperRadialModule.modelSelected(currentUpperRadial);
+                hasRadialChanged = true;
+            }
+            else if (f.name == Fields[nameof(currentLowerRadial)].name)
+            {
+                lowerRadialModule.modelSelected(currentLowerRadial);
+                hasRadialChanged = true;
+            }
 
+            if (hasRadialChanged) UpdateRadialPositions();
             ModelChangedHandler(true);
+
             MonoUtilities.RefreshPartContextWindow(part);
         }
 
@@ -729,6 +988,29 @@ namespace ROStations
             rot.y = currentBottomRotation;
             bottomModule.SetPosition(pos);
             bottomModule.SetRotation(rot);
+        }
+
+        public void UpdateRadialPositions()
+        {
+            float baseScale = coreModule.moduleHorizontalScale;
+            float vPos = 0f;
+
+            coreModule.GetRadialMountingValues(currentBodyRadialVOffset, currentBodyRadialHOffset, out bodyRadialRadius, out vPos);
+            bodyRadialModule.SetScale(currentBodyRadialScale, currentBodyRadialScale);
+            bodyRadialModule.SetPosition(vPos);
+            bodyRadialModule.UpdateModelScalesAndLayoutPositions();
+
+            ROLModelModule<ModuleROStations> module = GetModuleByName(currentUpperRadialParent);
+            module.GetRadialMountingValues(currentUpperRadialVOffset, currentUpperRadialHOffset, out upperRadialRadius, out vPos);
+            upperRadialModule.SetScale(currentUpperRadialScale, currentUpperRadialScale);
+            upperRadialModule.SetPosition(vPos);
+            upperRadialModule.UpdateModelScalesAndLayoutPositions();
+
+            module = GetModuleByName(currentLowerRadialParent);
+            module.GetRadialMountingValues(currentLowerRadialVOffset, currentLowerRadialHOffset, out lowerRadialRadius, out vPos);
+            lowerRadialModule.SetScale(currentLowerRadialScale, currentLowerRadialScale);
+            lowerRadialModule.SetPosition(vPos);
+            lowerRadialModule.UpdateModelScalesAndLayoutPositions();
         }
 
         public void UpdateModelMeshes()
@@ -882,6 +1164,9 @@ namespace ROStations
             lowerModule.updateSelections();
             topModule.updateSelections();            
             bottomModule.updateSelections();
+            bodyRadialModule.updateSelections();
+            upperRadialModule.updateSelections();
+            lowerRadialModule.updateSelections();
         }
 
         /// <summary>
@@ -916,6 +1201,43 @@ namespace ROStations
             if (!enableUpperVScale) currentUpperVScale = 0f;
             if (!enableLowerVScale) currentLowerVScale = 0f;
             if (!enableBottomVScale) currentBottomVScale = 0f;
+        }
+
+        private void ValidateRadial()
+        {
+            hasBodyRadial = (currentBodyRadial == "Model-None") ? false : true;
+            ROLLog.debug($"currentBodyRadial: {currentBodyRadial}");
+            ROLLog.debug($"hasBodyRadial: {hasBodyRadial}");
+            Fields[nameof(currentBodyRadialVOffset)].guiActiveEditor = hasBodyRadial;
+            Fields[nameof(currentBodyRadialHOffset)].guiActiveEditor = hasBodyRadial;
+            Fields[nameof(currentBodyRadialScale)].guiActiveEditor = hasBodyRadial;
+            //Fields[nameof(currentBodyRadialLayout)].guiActiveEditor = hasBodyRadial;
+            foreach (var item in bodyRadialModule.layoutOptions.layouts)
+            {
+                ROLLog.debug($"bodyRadialLayouts: {item}");
+            }
+
+            string[] upperRadialOptions = ROLUtils.parseCSV(upperParentOptions);
+            this.updateUIChooseOptionControl(nameof(currentUpperRadialParent), upperRadialOptions, upperRadialOptions, true, currentUpperRadialParent);
+            hasUpperRadial = (currentUpperRadial == "Model-None") ? false : true;
+            ROLLog.debug($"currentUpperRadial: {currentUpperRadial}");
+            ROLLog.debug($"hasUpperRadial: {hasUpperRadial}");
+            Fields[nameof(currentUpperRadialVOffset)].guiActiveEditor = hasUpperRadial;
+            Fields[nameof(currentUpperRadialHOffset)].guiActiveEditor = hasUpperRadial;
+            Fields[nameof(currentUpperRadialScale)].guiActiveEditor = hasUpperRadial;
+            //Fields[nameof(currentUpperRadialLayout)].guiActiveEditor = hasUpperRadial;
+            Fields[nameof(currentUpperRadialParent)].guiActiveEditor = hasUpperRadial;
+
+            string[] lowerRadialOptions = ROLUtils.parseCSV(lowerParentOptions);
+            this.updateUIChooseOptionControl(nameof(currentLowerRadialParent), lowerRadialOptions, lowerRadialOptions, true, currentLowerRadialParent);
+            hasLowerRadial = (currentLowerRadial == "Model-None") ? false : true;
+            ROLLog.debug($"currentLowerRadial: {currentLowerRadial}");
+            ROLLog.debug($"hasLowerRadial: {hasLowerRadial}");
+            Fields[nameof(currentLowerRadialVOffset)].guiActiveEditor = hasLowerRadial;
+            Fields[nameof(currentLowerRadialHOffset)].guiActiveEditor = hasLowerRadial;
+            Fields[nameof(currentLowerRadialScale)].guiActiveEditor = hasLowerRadial;
+            //Fields[nameof(currentLowerRadialLayout)].guiActiveEditor = hasLowerRadial;
+            Fields[nameof(currentLowerRadialParent)].guiActiveEditor = hasUpperRadial;
         }
 
         public void SendVolumeChangedEvent(float newVol)
@@ -1131,6 +1453,16 @@ namespace ROStations
             GameEvents.onPartResourceListChange.Fire(part);
             GameEvents.onEditorShipModified.Fire(EditorLogic.fetch.ship);
         }
+
+        private ROLModelModule<ModuleROStations> GetModuleByName(string name) => name switch
+        {
+            "Top" => topModule,
+            "Upper" => upperModule,
+            "Core" => coreModule,
+            "Lower" => lowerModule,
+            "Bottom" => bottomModule,
+            _ => coreModule,
+        };
 
         #endregion ENDREGION - Custom Update Methods
     }

@@ -35,7 +35,7 @@ UPPER
 	
 TOP
 	XXx (Skylab) bluedog_Skylab_multipleDockingAdapter (Skylab)
-	(Skylab) bluedog_structuralAdapter (Skylab)
+	NO (Skylab) bluedog_structuralAdapter (Skylab)
 	
 LOWER
 	XX (Skylab) bluedog_EOSS_aftMDA
@@ -52,10 +52,10 @@ OTHER PARTS TO CONFIGURE
 	XX bluedog_Skylab_evaLight
 	bluedog_Skylab_ATM_solar (Has Animations)
 	XX bluedog_Skylab_ATM_antenna
-	bluedog_Skylab_radarAltimeter
+	bluedog_Skylab_radarAltimeter				EXPERIMENT
 	XX bluedog_Skylab_discone_antenna
-	bluedog_MOL_TrackingAntenna
-	bluedog_Skylab_solar_radio_burst_antenna
-	bluedog_Apollo_ConeDockingPort
-	bluedog_Skylab_RAP
+	XX bluedog_MOL_TrackingAntenna
+	bluedog_Skylab_solar_radio_burst_antenna	EXPERIMENT
+	XX bluedog_Apollo_ConeDockingPort
+	XX bluedog_Skylab_RAP
 	bluedog_Gemini_DockingAntenna_Fixed
