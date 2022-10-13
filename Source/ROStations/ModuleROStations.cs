@@ -27,11 +27,6 @@ namespace ROStations
         [KSPField] public bool enableUpperVScale = false;
         [KSPField] public bool enableLowerVScale = false;
         [KSPField] public bool enableBottomVScale = false;
-        [KSPField] public int coreContainerIndex = 0;
-        [KSPField] public int topContainerIndex = 0;
-        [KSPField] public int upperContainerIndex = 0;
-        [KSPField] public int lowerContainerIndex = 0;
-        [KSPField] public int bottomContainerIndex = 0;
         [KSPField] public float habMinPercent = 5f;
         [KSPField] public float habMaxPercent = 95f;
         [KSPField] public string coreManagedNodes = string.Empty;
@@ -62,24 +57,24 @@ namespace ROStations
         public float currentDiameter = 2.0f;
 
         [KSPField(isPersistant = true, guiName = "V.ScaleAdj", groupName = GroupName),
-         UI_FloatEdit(sigFigs = 4, suppressEditorShipModified = true, minValue = -1, maxValue = 1, incrementLarge = 0.25f, incrementSmall = 0.05f, incrementSlide = 0.001f)]
-        public float currentVScale = 0f;
+         UI_FloatEdit(sigFigs = 4, suppressEditorShipModified = true, minValue = 0.25f, maxValue = 4, incrementLarge = 0.25f, incrementSmall = 0.05f, incrementSlide = 0.001f)]
+        public float currentVScale = 1f;
 
         [KSPField(isPersistant = true, guiName = "Top V.Scale", groupName = GroupName),
-         UI_FloatEdit(sigFigs = 4, suppressEditorShipModified = true, minValue = -1, maxValue = 1, incrementLarge = 0.25f, incrementSmall = 0.05f, incrementSlide = 0.001f)]
-        public float currentTopVScale = 0f;
+         UI_FloatEdit(sigFigs = 4, suppressEditorShipModified = true, minValue = 0.25f, maxValue = 4, incrementLarge = 0.25f, incrementSmall = 0.05f, incrementSlide = 0.001f)]
+        public float currentTopVScale = 1f;
 
         [KSPField(isPersistant = true, guiName = "Upper V.Scale", groupName = GroupName),
-         UI_FloatEdit(sigFigs = 4, suppressEditorShipModified = true, minValue = -1, maxValue = 1, incrementLarge = 0.25f, incrementSmall = 0.05f, incrementSlide = 0.001f)]
-        public float currentUpperVScale = 0f;
+         UI_FloatEdit(sigFigs = 4, suppressEditorShipModified = true, minValue = 0.25f, maxValue = 4, incrementLarge = 0.25f, incrementSmall = 0.05f, incrementSlide = 0.001f)]
+        public float currentUpperVScale = 1f;
 
         [KSPField(isPersistant = true, guiName = "Lower V.Scale", groupName = GroupName),
-         UI_FloatEdit(sigFigs = 4, suppressEditorShipModified = true, minValue = -1, maxValue = 1, incrementLarge = 0.25f, incrementSmall = 0.05f, incrementSlide = 0.001f)]
-        public float currentLowerVScale = 0f;
+         UI_FloatEdit(sigFigs = 4, suppressEditorShipModified = true, minValue = 0.25f, maxValue = 4, incrementLarge = 0.25f, incrementSmall = 0.05f, incrementSlide = 0.001f)]
+        public float currentLowerVScale = 1f;
 
         [KSPField(isPersistant = true, guiName = "Bottom V.Scale", groupName = GroupName),
-         UI_FloatEdit(sigFigs = 4, suppressEditorShipModified = true, minValue = -1, maxValue = 1, incrementLarge = 0.25f, incrementSmall = 0.05f, incrementSlide = 0.001f)]
-        public float currentBottomVScale = 0f;
+         UI_FloatEdit(sigFigs = 4, suppressEditorShipModified = true, minValue = 0.25f, maxValue = 4, incrementLarge = 0.25f, incrementSmall = 0.05f, incrementSlide = 0.001f)]
+        public float currentBottomVScale = 1f;
 
         [KSPField(isPersistant = true, guiActiveEditor = false, guiName = "Top Rot.", groupName = GroupName),
          UI_FloatEdit(sigFigs = 0, suppressEditorShipModified = true, minValue = -180f, maxValue = 180f, incrementLarge = 45f, incrementSmall = 15f, incrementSlide = 1f)]
@@ -234,21 +229,21 @@ namespace ROStations
         public void ResetModel()
         {
             currentDiameter = coreModule.definition.diameter;
-            currentVScale = 0f;
-            currentTopVScale = 0f;
-            currentUpperVScale = 0f;
-            currentLowerVScale = 0f;
-            currentBottomVScale = 0f;
+            currentVScale = 1f;
+            currentTopVScale = 1f;
+            currentUpperVScale = 1f;
+            currentLowerVScale = 1f;
+            currentBottomVScale = 1f;
             currentTopRotation = 0f;
             currentBottomRotation = 0f;
             currentHabitat = 90f;
 
             this.ROLupdateUIFloatEditControl(nameof(currentDiameter), minDiameter, maxDiameter, diameterLargeStep, diameterSmallStep, diameterSlideStep);
-            this.ROLupdateUIFloatEditControl(nameof(currentVScale), -1, 1, 0.25f, 0.05f, 0.001f);
-            this.ROLupdateUIFloatEditControl(nameof(currentTopVScale), -1, 1, 0.25f, 0.05f, 0.001f);
-            this.ROLupdateUIFloatEditControl(nameof(currentUpperVScale), -1, 1, 0.25f, 0.05f, 0.001f);
-            this.ROLupdateUIFloatEditControl(nameof(currentLowerVScale), -1, 1, 0.25f, 0.05f, 0.001f);
-            this.ROLupdateUIFloatEditControl(nameof(currentBottomVScale), -1, 1, 0.25f, 0.05f, 0.001f);
+            this.ROLupdateUIFloatEditControl(nameof(currentVScale), 0.25f, 4, 0.25f, 0.05f, 0.001f);
+            this.ROLupdateUIFloatEditControl(nameof(currentTopVScale), 0.25f, 4, 0.25f, 0.05f, 0.001f);
+            this.ROLupdateUIFloatEditControl(nameof(currentUpperVScale), 0.25f, 4, 0.25f, 0.05f, 0.001f);
+            this.ROLupdateUIFloatEditControl(nameof(currentLowerVScale), 0.25f, 4, 0.25f, 0.05f, 0.001f);
+            this.ROLupdateUIFloatEditControl(nameof(currentBottomVScale), 0.25f, 4, 0.25f, 0.05f, 0.001f);
             this.ROLupdateUIFloatEditControl(nameof(currentTopRotation), -180f, 180f, 45f, 15f, 1f);
             this.ROLupdateUIFloatEditControl(nameof(currentBottomRotation), -180f, 180f, 45f, 15f, 1f);
             this.ROLupdateUIFloatEditControl(nameof(currentHabitat), habMinPercent, habMaxPercent, 15f, 5f, 1f);
@@ -1197,10 +1192,10 @@ namespace ROStations
             Fields[nameof(currentUpperVScale)].guiActiveEditor = enableUpperVScale;
             Fields[nameof(currentLowerVScale)].guiActiveEditor = enableLowerVScale;
             Fields[nameof(currentBottomVScale)].guiActiveEditor = enableBottomVScale;
-            if (!enableTopVScale) currentTopVScale = 0f;
-            if (!enableUpperVScale) currentUpperVScale = 0f;
-            if (!enableLowerVScale) currentLowerVScale = 0f;
-            if (!enableBottomVScale) currentBottomVScale = 0f;
+            if (!enableTopVScale) currentTopVScale = 1f;
+            if (!enableUpperVScale) currentUpperVScale = 1f;
+            if (!enableLowerVScale) currentLowerVScale = 1f;
+            if (!enableBottomVScale) currentBottomVScale = 1f;
         }
 
         private void ValidateRadial()
@@ -1211,7 +1206,7 @@ namespace ROStations
             Fields[nameof(currentBodyRadialVOffset)].guiActiveEditor = hasBodyRadial;
             Fields[nameof(currentBodyRadialHOffset)].guiActiveEditor = hasBodyRadial;
             Fields[nameof(currentBodyRadialScale)].guiActiveEditor = hasBodyRadial;
-            //Fields[nameof(currentBodyRadialLayout)].guiActiveEditor = hasBodyRadial;
+            Fields[nameof(currentBodyRadialLayout)].guiActiveEditor = hasBodyRadial;
             foreach (var item in bodyRadialModule.layoutOptions.layouts)
             {
                 ROLLog.debug($"bodyRadialLayouts: {item}");
@@ -1225,7 +1220,7 @@ namespace ROStations
             Fields[nameof(currentUpperRadialVOffset)].guiActiveEditor = hasUpperRadial;
             Fields[nameof(currentUpperRadialHOffset)].guiActiveEditor = hasUpperRadial;
             Fields[nameof(currentUpperRadialScale)].guiActiveEditor = hasUpperRadial;
-            //Fields[nameof(currentUpperRadialLayout)].guiActiveEditor = hasUpperRadial;
+            Fields[nameof(currentUpperRadialLayout)].guiActiveEditor = hasUpperRadial;
             Fields[nameof(currentUpperRadialParent)].guiActiveEditor = hasUpperRadial;
 
             string[] lowerRadialOptions = ROLUtils.parseCSV(lowerParentOptions);
@@ -1236,8 +1231,8 @@ namespace ROStations
             Fields[nameof(currentLowerRadialVOffset)].guiActiveEditor = hasLowerRadial;
             Fields[nameof(currentLowerRadialHOffset)].guiActiveEditor = hasLowerRadial;
             Fields[nameof(currentLowerRadialScale)].guiActiveEditor = hasLowerRadial;
-            //Fields[nameof(currentLowerRadialLayout)].guiActiveEditor = hasLowerRadial;
-            Fields[nameof(currentLowerRadialParent)].guiActiveEditor = hasUpperRadial;
+            Fields[nameof(currentLowerRadialLayout)].guiActiveEditor = hasLowerRadial;
+            Fields[nameof(currentLowerRadialParent)].guiActiveEditor = hasLowerRadial;
         }
 
         public void SendVolumeChangedEvent(float newVol)
@@ -1398,9 +1393,9 @@ namespace ROStations
                 if (pm.GUIName == "Comfort")
                 {
                     string bonus = KerbalismInterface.GetComfortBonus(pm);
-                    if (bonus == "exercise" && exerciseEnabled) KerbalismInterface.SetComfortEnabled(pm, exerciseEnabled);
-                    if (bonus == "panorama" && panoramaEnabled) KerbalismInterface.SetComfortEnabled(pm, panoramaEnabled);
-                    if (bonus == "plants" && plantsEnabled) KerbalismInterface.SetComfortEnabled(pm, plantsEnabled);
+                    if (bonus == "exercise") KerbalismInterface.SetComfortEnabled(pm, exerciseEnabled);
+                    if (bonus == "panorama") KerbalismInterface.SetComfortEnabled(pm, panoramaEnabled);
+                    if (bonus == "plants") KerbalismInterface.SetComfortEnabled(pm, plantsEnabled);
                 }
             }
         }
