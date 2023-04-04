@@ -418,10 +418,7 @@ namespace ROStations
         /*
         public void OnDestroy()
         {
-            if (HighLogic.LoadedSceneIsEditor)
-            {
-                GameEvents.onPartActionUIDismiss.Remove(OnPawClose);
-            }
+            GameEvents.onPartActionUIDismiss.Remove(OnPawClose);
         }
         */
 
